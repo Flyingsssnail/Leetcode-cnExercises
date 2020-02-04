@@ -1,64 +1,15 @@
 class Solution {
     public boolean searchMatrix(int[][] matrix, int target) {
-        // matrix not exist
-        int m = matrix.length;
-        if (m == 0) return false;
+        if (matrix.length == 0 || matrix[0].length == 0) return false;
 
-        int n = matrix[0].length;
-        if (n == 0) return false;
+        int col = 0;
+        int row = matrix.length - 1;
 
-        int length = Math.min(m, n);
-        int remainder = Math.abs(m - n);
-        int row_s = 1;
-        int col_s = 1;
+        while (col >= 0 && col < matrix[0].length && row >= 0 && row < matrix.length) {
+            if (matrix[row][col] == target) return true;
+            else if (matrix[row][col] < target) col++;
+            else row--;
 
-        // matrix 1 size smaller than the symmetrical part matrix
-        while (remainder > 0) {
-            
-            if (binarySearch(0, length - 1, matrix, target, row_s, col_s)) return true;
-
-            if (m > n) {
-                m = remainder;
-                row_s += length;
-            }
-            else {
-                n = remainder;
-                col_s += length;
-            }
-
-            length = Math.min(m, n);
-            remainder = Math.abs(m - n);
-        }
-
-        if (binarySearch(0, length - 1, matrix, target, row_s, col_s)) return true;
-        return false;
-    }
-
-    private boolean binarySearch(int bottom, int top, int[][] matrix, int target, int row_s, int col_s) {
-        int diagonal = bottom + (top - bottom) / 2;
-
-        // success condition
-        if (diagonal == top) {
-            if (matrix[diagonal+row_s][diagonal+col_s] >= target) {
-                // search
-                if (search(diagonal, matrix, target, row_s, col_s)) return true;
-            }
-        }
-        else if (matrix[diagonal+row_s][diagonal+col_s] <= target && matrix[diagonal+row_s+1][diagonal+col_s+1] >= target){
-            // search
-            if (search(diagonal, matrix, target, row_s, col_s)) return true;
-        }
-
-        // stop condition
-        if (diagonal == bottom) return false;
-
-        // binary search through symmetrical matrix
-        return binarySearch(bottom, diagonal, matrix, target, row_s, col_s) || binarySearch(diagonal + 1, top, matrix, target, row_s, col_s);
-    }
-
-    private boolean search(int diagonal, int[][] matrix, int target, int row_s, int col_s) {
-        for (int i = 0; diagonal != Integer.MIN_VALUE && i <= diagonal; i++) {
-            if (matrix[i+row_s][diagonal] == target || matrix[diagonal][i+col_s] == target) return true;
         }
         return false;
     }
